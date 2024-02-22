@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './FeaturedProducts.scss'
 import Card from '../Card/Card'
+import axios from 'axios';
 
 const FeaturedProducts = ({ type }) => {
+
+
 
   const data = [
     {
@@ -39,6 +42,25 @@ const FeaturedProducts = ({ type }) => {
     },
   ]
 
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(import.meta.env.VITE_API_URL+"/products", {
+         headers: {
+          Authorization: "bearer "+ import.meta.env.VITE_API_TOKEN,
+         }
+        });
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  },[])
+
+
   return (
     <div className='featured-products'>
       <div className="top">
@@ -47,7 +69,7 @@ const FeaturedProducts = ({ type }) => {
       </div>
       <div className="bottom">
         {data.map(item => (
-          <Card item={item} key={item.id}/>
+          <Card item={item} key={item.id} />
         ))}
       </div>
     </div>

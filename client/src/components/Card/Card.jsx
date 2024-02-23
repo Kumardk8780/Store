@@ -5,8 +5,7 @@ import {Link} from 'react-router-dom'
 
 const Card = ({item}) => {
 
-  const upUrl = 'http://localhost:1337';
-  // console.log(item?.attributes?.img?.data?.attributes?.url);
+  const upUrl = import.meta.env.VITE_UPLOAD_URL;
 
   return (
     <Link className='link' to={`/product/${item.id}`}>

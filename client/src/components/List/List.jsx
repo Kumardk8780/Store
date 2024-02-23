@@ -1,49 +1,27 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 import './List.scss';
 import Card from '../Card/Card';
+import useFetch from '../../hooks/useFetch';
 
-const List = () => {
+const List = ({ subCats, maxPrice, sort, catId }) => {
+    const { data, loading, error } = useFetch(
+      `/products?populate=*&[filters][categories][id]=${catId}${subCats.map(
+        (item) => `&[filters][sub_categories][id][$eq]=${item}`
+      )}&[filters][price][$lte]=${maxPrice}&sort=price:${sort}`
+    );
+  
 
-    const data = [
-        {
-            id: 1,
-            img: 'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=1600',
-            img2: 'https://images.pexels.com/photos/280250/pexels-photo-280250.jpeg?auto=compress&cs=tinysrgb&w=1600',
-            isNew: true,
-            title: 'Watch',
-            oldPrice: 19,
-            price: 15,
-        },
-        {
-            id: 2,
-            img: 'https://images.pexels.com/photos/2693644/pexels-photo-2693644.jpeg?auto=compress&cs=tinysrgb&w=1600',
-            img2: 'https://images.pexels.com/photos/2517447/pexels-photo-2517447.jpeg?auto=compress&cs=tinysrgb&w=1600',
-            title: 'Eye Liner',
-            isNew: true,
-            oldPrice: 19,
-            price: 16,
-        },
-        {
-            id: 3,
-            img: 'https://images.pexels.com/photos/6187595/pexels-photo-6187595.jpeg?auto=compress&cs=tinysrgb&w=1600',
-            title: 'Utensils',
-            oldPrice: 19,
-            price: 12,
-        },
-        {
-            id: 4,
-            img: 'https://images.pexels.com/photos/8117815/pexels-photo-8117815.jpeg?auto=compress&cs=tinysrgb&w=1600',
-            title: 'Camera Stand',
-            oldPrice: 19,
-            price: 10,
-        },
-    ]
-
+// console.log(subCats);
     return (
         <div className='list'>
-            {data?.map(item => (
-                <Card item={item} key={item.id}/>
-            ))}
+            {
+                loading ? 'loading' :
+                    data?.map(item => (
+                        <Card item={item} key={item.id} />
+                    )
+                    )
+            }
         </div>
     )
 }

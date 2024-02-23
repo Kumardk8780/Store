@@ -9,11 +9,12 @@ import useFetch from '../../hooks/useFetch'
 const Product = () => {
 
   const id = useParams().id;
-  const [selectedImg, setSelectedImg] = useState('img')
+  const [selectedImg, setSelectedImg] = useState("img")
   const [quantity, setQuantity] = useState(0)
   const upUrl = import.meta.env.VITE_UPLOAD_URL;
-
+  // console.log(upUrl);
   const { data, loading, error } = useFetch(`/products/${id}?populate=*`);
+  // console.log(upUrl+data?.attributes[selectedImg]?.data?.attributes?.url);
 
   return (
     <div className='product'>
@@ -21,17 +22,18 @@ const Product = () => {
         <>
           <div className="left">
             <div className="images">
-              <img src={upUrl+data?.attributes?.img?.data?.attributes?.url} alt="Main-Image" onClick={e => setSelectedImg('img')} />
-              <img src={upUrl+data?.attributes?.img2?.data?.attributes?.url} alt="Second-Image" onClick={e => setSelectedImg('img2')} />
+              <img src={upUrl+data?.attributes?.img?.data?.attributes?.url} alt="Main-Image" onClick={() => setSelectedImg('img')} />
+              <img src={upUrl+data?.attributes?.img2?.data?.attributes?.url} alt="Second-Image" onClick={() => setSelectedImg('img2')} />
             </div>
             <div className="mainImg">
-              <img src={upUrl+data?.attributes[selectedImg]?.data?.attributes?.url} alt="Main-image" />
+             <img src={`${upUrl}${data?.attributes?.[selectedImg]?.data?.attributes?.url}`} alt="Main IMage" />
             </div>
           </div>
           <div className="right">
-            <h2>Title</h2>
-            <span className='price'>$199</span>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit vero aspernatur nostrum nulla non accusamus soluta ut velit, voluptatem sequi quis quasi amet totam porro itaque magni aliquam odio molestias?</p>
+            <h2>{data?.attributes?.title.toUpperCase()}</h2>
+            <span className='price'>${data?.attributes?.price}</span>
+            <p className='old-price'>${(data?.attributes?.price + 50).toFixed(2)}</p>
+            <p>{data?.attributes?.desc}</p>
             <div className="quantity">
               <button onClick={() => setQuantity((prev) => (prev === 1 ? 1 : prev - 1))}>-</button>
               {quantity}

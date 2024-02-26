@@ -4,17 +4,20 @@ import './Product.scss'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BalanceIcon from '@mui/icons-material/Balance';
-import useFetch from '../../hooks/useFetch'
+import useFetch from '../../hooks/useFetch';
+import {useDispatch} from 'react-redux'
+import { addToCart } from '../../redux/cartSlice';
 
 const Product = () => {
 
   const id = useParams().id;
   const [selectedImg, setSelectedImg] = useState("img")
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(1)
   const upUrl = import.meta.env.VITE_UPLOAD_URL;
-  // console.log(upUrl);
+
+  const dispatch = useDispatch()
   const { data, loading, error } = useFetch(`/products/${id}?populate=*`);
-  // console.log(upUrl+data?.attributes[selectedImg]?.data?.attributes?.url);
+
 
   return (
     <div className='product'>
@@ -39,7 +42,14 @@ const Product = () => {
               {quantity}
               <button onClick={() => setQuantity((prev) => prev + 1)}>+</button>
             </div>
-            <button className="add">
+            <button className="add" onClick={() => dispatch(addToCart({
+              id: data.id,
+              title: data.attributes.title,
+              price: data.attributes.price,
+              desc: data.attributes.desc,
+              img: data.attributes.img.data.attributes.url,
+              quantity,
+            }))}>
               <AddShoppingCartIcon /> ADD TO CART
             </button>
             <div className="links">
